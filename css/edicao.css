@@ -1,0 +1,34 @@
+.edicao {
+	width:70%;
+	height:85%;
+	top:15%;
+	left:0;
+	padding:25px;
+}
+.edicao-conteudo {
+	background-color:rgba(255,255,255,.75);
+	box-shadow:inset 0 0 10px 0 black;
+	width:100%;
+	height:100%;
+	padding:25px;
+	outline:none;
+	border:none;
+	overflow:hidden;
+	opacity:1;
+	transition:opacity .5s;
+	-webkit-transition:opacity .5s;
+	font-family:"Lucida Console", Monaco, monospace;
+	white-space:pre-wrap;
+	text-transform: uppercase;
+	resize: none;
+}
+.edicao-comRolagem {
+	padding-right:42px;
+}
+.edicao-inativo {
+	opacity:.5;
+}
+.edicao-conteudo:hover {
+	overflow:auto;
+	padding-right:25px;
+}

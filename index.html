@@ -1,17 +1,226 @@
-<!DOCTYPE>
+<!DOCTYPE HTML>
 <html>
-	<head>
-		<title>Compilador ES575</title>
-		<meta charset="utf-8">
-		<script src="js.js"></script>
-	</head>
-	<body>
-		<p>
-			<textarea id="input" rows="25" cols="100"></textarea>
-		</p>
-		<p>
-			<input type="button" value="Compilar" id="compile">
-		</p>
-		<pre id="output"></pre>
-	</body>
+
+<head>
+	<meta charset="utf-8">
+	<!--
+The MIT License (MIT)
+
+Copyright (c) 2014 Guilherme Souza
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+-->
+	<title>Compilador ES575</title>
+	<link rel="stylesheet" href="css/botao.css">
+	<link rel="stylesheet" href="css/menu.css">
+	<link rel="stylesheet" href="css/janela.css">
+	<link rel="stylesheet" href="css/aba.css">
+	<link rel="stylesheet" href="css/sintaxe.css">
+	<link rel="stylesheet" href="css/edicao.css">
+	<link rel="stylesheet" href="css/painel.css">
+	<link rel="stylesheet" href="css/layout.css">
+	<link rel="icon" href="img/icone.png">
+	<script src="lang/en.js"></script>
+	<script src="js/dados/Editor.js"></script>
+	<script src="js/dados/Programa.js"></script>
+	<script src="js/dados/Compilador.js"></script>
+	<script src="js/dados/Arquivo.js"></script>
+	<script src="js/interface/Interface.js"></script>
+	<script src="js/interface/InterfaceAbas.js"></script>
+	<script src="js/interface/InterfaceEdicao.js"></script>
+	<script src="js/interface/InterfaceMenus.js"></script>
+	<script src="js/interface/JanelaAbrir.js"></script>
+	<script src="js/interface/JanelaAjuda.js"></script>
+	<script src="js/interface/JanelaBasica.js"></script>
+	<script src="js/interface/JanelaDownload.js"></script>
+	<script src="js/editor.js"></script>
+</head>
+
+<body>
+	<!-- Menu -->
+	<div class="menu">
+		<div class="menuBotao botao2" id="menuAbrir">
+			<div class="botao2Esq" title="Ctrl+O">Abrir</div>
+			<div class="botao2Dir" id="menuAbrirMais">&#9660;</div>
+		</div>
+		<div class="menuBotao botao2" id="menuSalvar">
+			<div class="botao2Esq" title="Ctrl+S">Salvar</div>
+			<div id="menuSalvarMais" class="botao2Dir">&#9660;</div>
+		</div>
+		<div id="menuAjuda" class="menuBotao botao-azul" title="F1">Ajuda</div>
+
+		<!-- abas -->
+		<div id="abas">
+			<div class="aba aba-mais" id="abaMais" title="Novo livro (Ctrl+N)">+</div>
+		</div>
+	</div>
+
+	<!-- Submenus dos menus -->
+	<div id="submenuAbrir" class="submenu" style="display:none">
+		<div class="submenu-item" id="submenuAbrir-recentes" title="Ctrl+O">Recentes</div>
+		<div class="submenu-item" id="submenuAbrir-upload">Upload</div>
+		<div class="submenu-item" id="submenuAbrir-novo" title="Ctrl+N">Novo</div>
+	</div>
+	<div id="submenuSalvar" class="submenu" style="display:none">
+		<div class="submenu-item" id="submenuSalvar-arquivo">Gerar arquivo</div>
+		<div class="submenu-item" id="submenuSalvar-salvar">Somente salvar</div>
+		<div class="submenu-item" id="submenuSalvar-salvarTodos" title="Ctrl+Shift+S">Salvar todos</div>
+		<div class="submenu-item" id="submenuSalvar-salvarComo">Salvar como</div>
+	</div>
+
+	<!-- Edição -->
+	<div class="edicao">
+		<textarea id="edicao" class="edicao-conteudo"></textarea>
+	</div>
+
+	<!-- Sintaxe -->
+	<div class="sintaxe">
+		<div class="painel-titulo">Sintaxe</div>
+		<div id="sintaxe" class="painel-conteudo">
+			<div class="sintaxe-conteudo">
+				<h2>Geral</h2>
+				<ul>
+					<li>Comentários com <code>#</code>, <code>%</code>, <code>;</code> ou <code>//</code></li>
+					<li>Labels com <code>minha_label:</code></li>
+					<li>Números: <code>17</code>, <code>-12</code>, <code>0b100101</code>, <code>0x36A</code></li>
+				</ul>
+				<h2>Conjunto básico</h2>
+				<ul>
+					<li><code>NOP</code>: instrução vazia</li>
+					<li><code>MOV rx, ry</code>: Ry &larr; Rx</li>
+					<li><code>MOV rx, I</code>: Ry &larr; I</li>
+					<li><code>ADD rx, ry</code>: Rx &larr; Rx+Ry</li>
+					<li><code>SUB rx, ry</code>: Ry &larr; RX-Ry</li>
+					<li><code>OUT rx</code>: output &larr; Rx</li>
+					<li><code>IN rx</code>: Rx &larr; input</li>
+					<li><code>LOAD rx, I</code>: Rx &larr; M[I]</li>
+					<li><code>STORE rx, I</code>: M[I] &larr; Rx</li>
+				</ul>
+				<h2>Pseudo instruções</h2>
+				<ul>
+					<li><code>ADD rx, ry, rz</code>: Rx &larr; Ry+Rz</li>
+					<li><code>SUB rx, ry, rz</code>: Rx &larr; Ry-Rz</li>
+					<li><code>JMP _label_</code>: PC &larr; _label_</li>
+				</ul>
+				<h2>Conjunto original</h2>
+				<ul>
+					<li><code>MVI x, I</code>: Rx &larr; I</li>
+					<li><code>MOV x, y</code>: Rx &larr; Ry</li>
+					<li><code>CLRREG x</code>: Rx &larr; 0</li>
+					<li><code>ADD x, y</code>: Rx &larr; Rx+Ry</li>
+					<li><code>SUB x, y</code>: Rx &larr; Rx-Ry</li>
+					<li><code>LOAD x, I</code>: Rx &larr; M[I]</li>
+					<li><code>STORE I, x</code>: M[I] &larr; Rx</li>
+					<li><code>DATAOUT x</code>: output &larr; Rx</li>
+					<li><code>DATAIN x</code>: Rx &larr; input</li>
+					<li><code>GOTO I</code>: PC &larr; I</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	</div>
+
+	<div id="fundoJanela" class="fundoJanela" style="display:none"></div>
+
+	<!-- Janela de abrir -->
+	<div id="janelaAbrir" class="janela" style="display:none">
+		<div class="janela-titulo">Abrir arquivo</div>
+		<div class="janela-fechar minibotao-vermelho">&times;</div>
+		<div class="janela-barra">
+			<div class="janela-lista" id="janelaAbrir-recentes">Recentes</div>
+			<div class="janela-lista" id="janelaAbrir-upload">Upload</div>
+			<div class="janela-lista" id="janelaAbrir-novo" title="Ctrl+N">Novo</div>
+		</div>
+		<div class="janela-painel">
+			<div class="janela-painel-conteudo">
+				<div id="janelaAbrir-abaRecentes" style="display:none"></div>
+				<div id="janelaAbrir-abaUpload" style="display:none">
+					<p>Selecione um arquivo *.hp do seu computador</p>
+					<input type="file" id="janelaAbrir-upload-arquivo" accept=".hp">
+					<div class="botao-verde" id="janelaAbrir-upload-abrir">Abrir</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Janela de ajuda -->
+	<div id="janelaAjuda" class="janela" style="display:none">
+		<div class="janela-titulo">Ajuda</div>
+		<div class="janela-fechar minibotao-vermelho">&times;</div>
+		<div class="janela-barra">
+			<div class="janela-lista" id="janelaAjuda-sobre">Sobre</div>
+			<div class="janela-lista" id="janelaAjuda-creditos">Créditos</div>
+		</div>
+		<div class="janela-painel">
+			<div class="janela-painel-conteudo">
+				<div id="janelaAjuda-abaSobre">
+					<h1>Compilador ES575</h1>
+					<p>Esse é um editor e compilador para o projeto da disciplina de circuitos lógicos (ES575) da Faculdade de Engenharia Mecânica (FEM) na Unicamp.</p>
+					<p>Ele é totalmente baseado em tecnologias Web (HTML, CSS e JS) e funciona em qualquer browser moderno (FF 15+ e Chrome).</p>
+					<p>Ele gera o arquivo *.mif para ser usado na inicialização da memória ROM da placa</p>
+					<p>O arquivo gerado pode ser aberto e editado novamente, se necessário.</p>
+					<p>Qualquer problema, <a href="#" onclick="window.open('/fale_conosco/?assunto=compilador-ES575', 'janelaFaleConosco', 'width=500,height=500'); return false">Fale Conosco</a></p>
+				</div>
+				<div id="janelaAjuda-abaCreditos" style="display:none">
+					<p><strong>Idealizador, programador, designer e feliz</strong>
+						<br>Guilherme de Oliveira Souza (<a href="http://sitegui.com.br">sitegui.com.br</a>)
+						<br><a href="#" onclick="window.open('/fale_conosco/?assunto=compilador-ES575', 'janelaFaleConosco', 'width=500,height=500'); return false">Fale Conosco</a>
+					</p>
+					<p><strong>Código fonte</strong>
+						<br><a href="https://github.com/sitegui/compiladorES575/" target="_blank">github.com/sitegui/compiladorES575</a>
+					</p>
+					<p><strong>Fundo</strong>
+						<br><a href="http://subtlepatterns.com/" target="_blank">subtlepatterns.com</a>
+					</p>
+					<p><strong>Ícone</strong>
+						<br><a href="http://www.findicons.com/" target="_blank">findicons.com</a>
+					</p>
+					<p><strong>Licença</strong>
+						<br><a href="http://opensource.org/licenses/MIT" target="_blank">MIT LICENSE</a>
+						<br>Copyright 2014 Guilherme de Oliveira Souza</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Janela de confirma/cancela básica -->
+	<div id="janelaBasica" class="janelaMenor" style="display:none">
+		<div class="janela-titulo" id="janelaBasica-titulo"></div>
+		<div class="janela-fechar minibotao-vermelho" id="janelaBasica-fechar">&times;</div>
+		<div class="janelaBasica-conteudo">
+			<div id="janelaBasica-conteudo"></div>
+			<div class="janelaBasica-cancelar botao-vermelho" id="janelaBasica-cancelar">Cancelar</div>
+			<div class="janelaBasica-confirmar botao-verde" id="janelaBasica-confirmar">Confirmar</div>
+		</div>
+	</div>
+
+	<!-- Janela de download -->
+	<div id="janelaDownload" class="janelaMenor" style="display:none">
+		<div class="janela-titulo">Download</div>
+		<div class="janela-fechar minibotao-vermelho" id="janelaDownload-fechar">&times;</div>
+		<div class="janelaBasica-conteudo">
+			<div id="janelaDownload-sucesso">
+				<p>Seu arquivo está compilado. Para usa-lo siga os passos:</p>
+				<ol>
+					<li><a id="janelaDownload-link" title="Clique para fazer o download">Clique aqui para baixa-lo</a>
+					</li>
+					<li>Salve-o na pasta do projeto do Quartus</li>
+					<li>Selecione o arquivo para inicializar a memória ROM</li>
+				</ol>
+			</div>
+			<div id="janelaDownload-erro">
+				<p>Seu programa contém erros:</p>
+				<ul id="janelaDownload-erros"></ul>
+			</div>
+			<div class="janelaBasica-cancelar botao-vermelho" id="janelaDownload-cancelar">Cancelar</div>
+		</div>
+	</div>
+
+</body>
+
 </html>
