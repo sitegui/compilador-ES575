@@ -102,6 +102,9 @@ InterfaceMenus.init = function () {
 InterfaceMenus.salvarPrograma = function (programa, onsucesso) {
 	var arquivo, opcoes, aba
 	
+	// Força a perda de foco da edição
+	get("edicao").onblur()
+	
 	aba = Interface.abaFoco
 	if (programa.novo) {
 		// Pergunta pelo nome

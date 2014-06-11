@@ -92,19 +92,19 @@ furnished to do so, subject to the following conditions:
 				<h2>Conjunto básico</h2>
 				<ul>
 					<li><code>NOP</code>: instrução vazia</li>
-					<li><code>MOV rx, ry</code>: Ry &larr; Rx</li>
-					<li><code>MOV rx, I</code>: Ry &larr; I</li>
-					<li><code>ADD rx, ry</code>: Rx &larr; Rx+Ry</li>
-					<li><code>SUB rx, ry</code>: Ry &larr; RX-Ry</li>
-					<li><code>OUT rx</code>: output &larr; Rx</li>
-					<li><code>IN rx</code>: Rx &larr; input</li>
-					<li><code>LOAD rx, I</code>: Rx &larr; M[I]</li>
-					<li><code>STORE rx, I</code>: M[I] &larr; Rx</li>
+					<li><code>MOV Rx, Ry</code>: Rx &larr; Ry</li>
+					<li><code>MOV Rx, I</code>: Rx &larr; I</li>
+					<li><code>ADD Rx, Ry</code>: Rx &larr; Rx+Ry</li>
+					<li><code>SUB Rx, Ry</code>: Ry &larr; RX-Ry</li>
+					<li><code>OUT Rx</code>: output &larr; Rx</li>
+					<li><code>IN Rx</code>: Rx &larr; input</li>
+					<li><code>LOAD Rx, I</code>: Rx &larr; M[I]</li>
+					<li><code>STORE Rx, I</code>: M[I] &larr; Rx</li>
 				</ul>
 				<h2>Pseudo instruções</h2>
 				<ul>
-					<li><code>ADD rx, ry, rz</code>: Rx &larr; Ry+Rz</li>
-					<li><code>SUB rx, ry, rz</code>: Rx &larr; Ry-Rz</li>
+					<li><code>ADD Rx, Ry, Rz</code>: Rx &larr; Ry+Rz</li>
+					<li><code>SUB Rx, Ry, Rz</code>: Rx &larr; Ry-Rz</li>
 					<li><code>JMP _label_</code>: PC &larr; _label_</li>
 				</ul>
 				<h2>Conjunto original</h2>
@@ -140,8 +140,8 @@ furnished to do so, subject to the following conditions:
 			<div class="janela-painel-conteudo">
 				<div id="janelaAbrir-abaRecentes" style="display:none"></div>
 				<div id="janelaAbrir-abaUpload" style="display:none">
-					<p>Selecione um arquivo *.hp do seu computador</p>
-					<input type="file" id="janelaAbrir-upload-arquivo" accept=".hp">
+					<p>Selecione um arquivo *.mif do seu computador</p>
+					<input type="file" id="janelaAbrir-upload-arquivo" accept=".mif">
 					<div class="botao-verde" id="janelaAbrir-upload-abrir">Abrir</div>
 				</div>
 			</div>

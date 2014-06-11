@@ -57,7 +57,16 @@ Editor.criarNovoPrograma = function () {
 	programa.novo = true
 	
 	// Cria elementos básicos
-	programa.programa = "# Programa exemplo\nLOOP: in r0\nmov r1, 17\nadd r2, r0, r1\nout r2\njmp LOOP"
+	programa.programa = "# Fibonacci\n\n"+
+		"# f(1) = f(2) = 1\n"+
+		"mov r0, 1\n"+
+		"mov r1, 1\n\n"+
+		"loop:\n"+
+		"	out r0 # out f(n)\n"+
+		"	add r2, r0, r1 # f(n+1) = f(n)+f(n-1)\n"+
+		"	mov r0, r1\n"+
+		"	mov r1, r2\n"+
+		"	jmp loop"
 	
 	// Exibe
 	aba = new Aba(programa)
